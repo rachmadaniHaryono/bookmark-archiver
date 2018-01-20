@@ -88,7 +88,7 @@ def update_archive(archive_path, links, source=None, resume=None, append=True):
     print('    - {} errors'.format(_RESULTS_TOTALS['failed']))
 
 
-if __name__ == '__main__':
+def main():
     argc = len(sys.argv)
 
     if argc < 2 or set(sys.argv).intersection('-h', '--help', 'help'):
@@ -122,3 +122,7 @@ if __name__ == '__main__':
 
     # Step 4: Run the archive methods for each link
     update_archive(archive_path, links, source=source, resume=resume, append=True)
+
+
+if __name__ == '__main__':
+    main()

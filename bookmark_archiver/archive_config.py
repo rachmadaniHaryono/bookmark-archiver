@@ -14,8 +14,7 @@ parser.add_argument(
 
 configuration = ConfigParser()
 
-if __name__ == '__main__':
-
+def main():
     args = parser.parse_args()
 
     if args.config:
@@ -35,3 +34,8 @@ if __name__ == '__main__':
                 configuration.get(section, option),
                 )
             )
+
+
+if __name__ == '__main__':
+    main()
+

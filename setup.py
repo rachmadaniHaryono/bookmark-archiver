@@ -10,6 +10,10 @@ setup(
     description='Your own personal Way-Back Machine',
     author='Nick Sweeting',
     url='https://pirate.github.io/bookmark-archiver/',
+    project_urls={
+        'website': 'https://pirate.github.io/bookmark-archiver/',
+        'repository': 'https://github.com/pirate/bookmark-archiver',
+    },
     license='MIT',
     packages=find_packages(),
     install_requires=[
@@ -24,9 +28,11 @@ setup(
     data_files=[
         (user_conf_path, ['conf/user.conf']),
     ],
-    scripts=[
-        'bin/archive',
-        'bin/archive-config',
-    ],
+    entry_points={
+        'console_scripts': [
+            'archive=bookmark_archiver.archive:main',
+            'archive-config=bookmark_archive.archive_config:main',
+        ]
+    },
     zip_safe=False
 )
