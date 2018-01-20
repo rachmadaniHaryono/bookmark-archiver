@@ -35,7 +35,7 @@ Link {
 import datetime
 from html import unescape
 
-from util import (
+from .util import (
     domain,
     base_url,
     str_between,
@@ -50,7 +50,7 @@ def validate_links(links):
     links = archivable_links(links)  # remove chrome://, about:, mailto: etc.
     links = uniquefied_links(links)  # merge/dedupe duplicate timestamps & urls
     links = sorted_links(links)      # deterministically sort the links based on timstamp, url
-    
+
     if not links:
         print('[X] No links found :(')
         raise SystemExit(1)
@@ -58,7 +58,7 @@ def validate_links(links):
     for link in links:
         link['title'] = unescape(link['title'])
         link['latest'] = link.get('latest') or {}
-        
+
         if not link['latest'].get('wget'):
             link['latest']['wget'] = wget_output_path(link)
 
@@ -113,6 +113,7 @@ def links_after_timestamp(links, timestamp=None):
         yield from links
         return
 
+    print('[.] [{}] Resuming...'.format(timestamp))
     for link in links:
         try:
             if float(link['timestamp']) <= float(timestamp):

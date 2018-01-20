@@ -8,9 +8,9 @@ from subprocess import run, PIPE, DEVNULL
 
 from peekable import Peekable
 
-from index import wget_output_path, parse_json_link_index, write_link_index
-from links import links_after_timestamp
-from config import (
+from .index import html_appended_url, parse_json_link_index, wget_output_path, write_link_index
+from .links import links_after_timestamp
+from .config import (
     ARCHIVE_DIR,
     CHROME_BINARY,
     FETCH_WGET,
@@ -28,7 +28,7 @@ from config import (
     TIMEOUT,
     ANSI,
 )
-from util import (
+from .util import (
     check_dependencies,
     progress,
     chmod_file,
@@ -51,7 +51,7 @@ def archive_links(archive_path, links, source=None, resume=None):
         for idx, link in enumerate(to_archive):
             link_dir = os.path.join(archive_path, 'archive', link['timestamp'])
             archive_link(link_dir, link)
-    
+
     except (KeyboardInterrupt, SystemExit, Exception) as e:
         print('{lightyellow}[X] [{now}] Downloading paused on link {timestamp} ({idx}/{total}){reset}'.format(
             **ANSI,
@@ -107,7 +107,7 @@ def archive_link(link_dir, link, overwrite=True):
 
     write_link_index(link_dir, link)
     # print()
-    
+
     return link
 
 def log_link_archive(link_dir, link, update_existing):
@@ -118,6 +118,8 @@ def log_link_archive(link_dir, link, update_existing):
         **link,
         **ANSI,
     ))
+    if link['type']:
+        print('    i Type: {}'.format(link['type']))
 
     print('    > {}{}'.format(link_dir, '' if update_existing else ' (new)'))
     if link['type']:
@@ -172,7 +174,7 @@ def attach_result_to_link(method):
                 link['latest'][method] = result['output']
 
             _RESULTS_TOTALS[history_entry['status']] += 1
-            
+
             return link
         return timed_fetch_func
     return decorator
@@ -223,7 +225,7 @@ def fetch_pdf(link_dir, link, timeout=TIMEOUT, user_data_dir=CHROME_USER_DATA_DI
 
     if link['type'] in ('PDF', 'image'):
         return {'output': wget_output_path(link)}
-    
+
     if os.path.exists(os.path.join(link_dir, 'output.pdf')):
         return {'output': 'output.pdf', 'status': 'skipped'}
 
@@ -259,7 +261,7 @@ def fetch_screenshot(link_dir, link, timeout=TIMEOUT, user_data_dir=CHROME_USER_
 
     if link['type'] in ('PDF', 'image'):
         return {'output': wget_output_path(link)}
-    
+
     if os.path.exists(os.path.join(link_dir, 'screenshot.png')):
         return {'output': 'screenshot.png', 'status': 'skipped'}
 
@@ -288,7 +290,7 @@ def fetch_screenshot(link_dir, link, timeout=TIMEOUT, user_data_dir=CHROME_USER_
         'cmd': CMD,
         'output': output,
     }
-    
+
 
 @attach_result_to_link('archive_org')
 def archive_dot_org(link_dir, link, timeout=TIMEOUT):
