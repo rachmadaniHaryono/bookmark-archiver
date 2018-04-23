@@ -43,7 +43,7 @@ from .util import (
     merge_links,
     wget_output_path,
 )
-from config import ANSI
+from .config import ANSI
 
 
 def validate_links(links):

@@ -88,10 +88,11 @@ def update_archive(archive_path, links, source=None, resume=None, append=True):
     print('    - {} errors'.format(_RESULTS_TOTALS['failed']))
 
 
-def main():
+def main(*argv):
+    argv = sys.argv if argv is None else argv
     argc = len(sys.argv)
 
-    if argc < 3 or set(sys.argv).intersection('-h', '--help', 'help'):
+    if argc < 2 or set(argv).intersection(('-h', '--help', 'help')):
         print_help()
         raise SystemExit(0)
 

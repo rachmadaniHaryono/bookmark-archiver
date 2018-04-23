@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import datetime
 from subprocess import run, PIPE, DEVNULL
 
-from peekable import Peekable
+from .peekable import Peekable
 
 logger = logging.getLogger()
 try:

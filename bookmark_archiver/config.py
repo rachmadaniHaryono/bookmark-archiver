@@ -29,7 +29,11 @@ except KeyError as e:
         print('No config files.')
         yes = {'yes','y', 'ye'}
         no = {'no','n', ''}
-        choice = input('Do you want to use default config? (y/[n])').lower()
+        choice = bool(os.getenv('BOOKMARK_ARCHIVER_USE_DEFAULT_CONFIG', False))
+        if choice:
+            choice = 'y'
+        else:
+            choice = input('Do you want to use default config? (y/[n])').lower()
         if choice in yes:
             src_filename = pkg_resources.resource_filename(__name__, "archiver.conf")
             dst_filename = 'archiver.conf'

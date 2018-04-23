@@ -15,8 +15,11 @@ setup(
     install_requires=[
         'requests',
     ],
+    extras_require={
+        'dev':  ["pdbpp"],
+    },
     package_data={
-        '': ['templates/*.html', 'archiver.confg'],
+        '': ['templates/*.html', 'archiver.conf'],
     },
     data_files=[
         ('/etc/bookmark-archiver', ['conf/archiver.conf']),
