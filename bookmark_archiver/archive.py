@@ -33,11 +33,11 @@ from bookmark_archiver.util import (
 __DESCRIPTION__ = 'Bookmark Archiver: Create a browsable html archive of a list of links.'
 __DOCUMENTATION__ = 'https://github.com/pirate/bookmark-archiver'
 
-def print_help():
+def print_help(program_name='archive'):
     print(__DESCRIPTION__)
     print("Documentation:     {}\n".format(__DOCUMENTATION__))
     print("Usage:")
-    print("    ./archive.py ~/Downloads/bookmarks_export.html\n")
+    print("    {} ~/Downloads/bookmarks_export.html\n".format(program_name))
 
 
 def get_links(new_links_file_path, archive_path=HTML_FOLDER):
@@ -51,7 +51,7 @@ def get_links(new_links_file_path, archive_path=HTML_FOLDER):
     if archive_path:
         existing_links = parse_json_links_index(archive_path)
         valid_links = validate_links(existing_links + valid_links)
-    
+
     num_new_links = len(valid_links) - len(existing_links)
     print('[*] [{}] Adding {} new links from {} to index'.format(
         datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -91,13 +91,13 @@ def update_archive(archive_path, links, source=None, resume=None, append=True):
 def main():
     argc = len(sys.argv)
 
-    if argc < 2 or set(sys.argv).intersection('-h', '--help', 'help'):
+    if argc < 3 or set(sys.argv).intersection('-h', '--help', 'help'):
         print_help()
         raise SystemExit(0)
 
     source = sys.argv[1]                        # path to export file
     resume = sys.argv[2] if argc > 2 else None  # timestamp to resume dowloading from
-   
+
     # See if archive folder already exists
     for out_folder in (HTML_FOLDER, 'bookmarks', 'pocket', 'pinboard', 'html'):
         if os.path.exists(out_folder):
@@ -107,7 +107,7 @@ def main():
 
     archive_path = os.path.join(out_folder, 'archive')
 
-    # Step 0: Download url to local file (only happens if a URL is specified instead of local path) 
+    # Step 0: Download url to local file (only happens if a URL is specified instead of local path)
     if any(source.startswith(s) for s in ('http://', 'https://', 'ftp://')):
         source = download_url(source)
 

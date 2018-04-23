@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 
@@ -5,16 +6,26 @@ from datetime import datetime
 from string import Template
 from distutils.dir_util import copy_tree
 
+logger = logging.getLogger()
+try:
+    from .config import TEMPLATE_STATICFILES
+except ImportError as e:
+    logger.debug('{}:{}')
+    TEMPLATE_STATICFILES = None
+try:
+    from .config import FOOTER_INFO
+except ImportError as e:
+    logger.debug('{}:{}')
+    FOOTER_INFO = None
+
 from .config import (
     INDEX_TEMPLATE,
     INDEX_ROW_TEMPLATE,
     LINK_INDEX_TEMPLATE,
-    TEMPLATE_STATICFILES,
     ARCHIVE_PERMISSIONS,
     ARCHIVE_DIR,
     ANSI,
     GIT_SHA,
-    FOOTER_INFO,
 )
 from .util import (
     chmod_file,

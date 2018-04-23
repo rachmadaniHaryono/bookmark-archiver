@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -8,7 +9,18 @@ from subprocess import run, PIPE, DEVNULL
 
 from peekable import Peekable
 
-from .index import html_appended_url, parse_json_link_index, wget_output_path, write_link_index
+logger = logging.getLogger()
+try:
+    from .index import html_appended_url
+except ImportError as e:
+    logger.debug('{}:{}')
+    html_appended_url = None
+try:
+    from .links import CHECK_SSL_VALIDITY
+except ImportError as e:
+    logger.debug('{}:{}')
+    CHECK_SSL_VALIDITY = None
+from .index import parse_json_link_index, wget_output_path, write_link_index
 from .links import links_after_timestamp
 from .config import (
     ARCHIVE_DIR,
@@ -18,7 +30,6 @@ from .config import (
     FETCH_PDF,
     FETCH_SCREENSHOT,
     RESOLUTION,
-    CHECK_SSL_VALIDITY,
     SUBMIT_ARCHIVE_DOT_ORG,
     FETCH_AUDIO,
     FETCH_VIDEO,

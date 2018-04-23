@@ -20,7 +20,27 @@ config.read(
 )
 
 IS_TTY = sys.stdout.isatty()
-USE_COLOR = config['tty'].getboolean('color')
+try:
+    USE_COLOR = config['tty'].getboolean('color')
+except KeyError as e:
+    if any(os.path.isfile(x) for x in config_files):
+        raise e
+    else:
+        print('No config files.')
+        yes = {'yes','y', 'ye'}
+        no = {'no','n', ''}
+        choice = input('Do you want to use default config? (y/[n])').lower()
+        if choice in yes:
+            src_filename = pkg_resources.resource_filename(__name__, "archiver.conf")
+            dst_filename = 'archiver.conf'
+            shutil.copyfile(src_filename, dst_filename)
+            print('create default config on {}'.format(os.path.abspath(dst_filename)))
+            config.read(dst_filename)
+            print('load config')
+            USE_COLOR = config['tty'].getboolean('color')
+        else:
+            print('No config created.')
+            raise e
 SHOW_PROGRESS = config['tty'].getboolean('progres')
 
 FETCH_WGET = config['wget'].getboolean('enabled')
