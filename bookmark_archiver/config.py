@@ -19,12 +19,10 @@ config.read(
     encoding='utf8',
 )
 
-IS_TTY = sys.stdout.isatty()
-try:
-    USE_COLOR = config['tty'].getboolean('color')
-except KeyError as e:
+
+def get_default_config(err):
     if any(os.path.isfile(x) for x in config_files):
-        raise e
+        raise err
     else:
         print('No config files.')
         yes = {'yes','y', 'ye'}
@@ -39,12 +37,20 @@ except KeyError as e:
             dst_filename = 'archiver.conf'
             shutil.copyfile(src_filename, dst_filename)
             print('create default config on {}'.format(os.path.abspath(dst_filename)))
-            config.read(dst_filename)
-            print('load config')
-            USE_COLOR = config['tty'].getboolean('color')
+            return dst_filename
         else:
             print('No config created.')
-            raise e
+            raise err
+
+
+IS_TTY = sys.stdout.isatty()
+try:
+    USE_COLOR = config['tty'].getboolean('color')
+except KeyError as e:
+    dst_filename = get_default_config(e)
+    config.read(dst_filename)
+    print('load config')
+    USE_COLOR = config['tty'].getboolean('color')
 SHOW_PROGRESS = config['tty'].getboolean('progres')
 
 FETCH_WGET = config['wget'].getboolean('enabled')
