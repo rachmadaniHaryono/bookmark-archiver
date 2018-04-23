@@ -16,7 +16,7 @@ setup(
         'requests',
     ],
     package_data={
-        '': ['templates/*.html'],
+        '': ['templates/*.html', 'archiver.confg'],
     },
     data_files=[
         ('/etc/bookmark-archiver', ['conf/archiver.conf']),
