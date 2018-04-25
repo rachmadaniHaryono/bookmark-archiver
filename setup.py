@@ -28,7 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'archive=bookmark_archiver.archive:main',
-            'archive-config=bookmark_archive.archive_config:main',
+            'archive-config=bookmark_archiver.archive_config:main',
         ]
     },
     zip_safe=False
