@@ -21,8 +21,12 @@ config.read(
 
 
 def get_default_config(err):
+    from_env_config = os.getenv('BOOKMARK_ARCHIVER_CONFIG', None)
+    from_env_config_exist = os.path.isfile(from_env_config) if from_env_config else False
     if any(os.path.isfile(x) for x in config_files):
         raise err
+    elif from_env_config and from_env_config_exist:
+        dst_filename = from_env_config
     else:
         print('No config files.')
         yes = {'yes','y', 'ye'}
@@ -35,12 +39,15 @@ def get_default_config(err):
         if choice in yes:
             src_filename = pkg_resources.resource_filename(__name__, "archiver.conf")
             dst_filename = 'archiver.conf'
-            shutil.copyfile(src_filename, dst_filename)
-            print('create default config on {}'.format(os.path.abspath(dst_filename)))
-            return dst_filename
+            try:
+                shutil.copyfile(src_filename, dst_filename)
+                print('create default config on {}'.format(os.path.abspath(dst_filename)))
+            except shutil.SameFileError as e:
+                print('{}: {}'.format(type(e), e))
         else:
             print('No config created.')
             raise err
+    return dst_filename
 
 
 IS_TTY = sys.stdout.isatty()
