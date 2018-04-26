@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import shutil
@@ -6,6 +7,7 @@ from configparser import ConfigParser
 import pkg_resources
 from subprocess import run, PIPE
 
+logger = logging.getLogger()
 user_config_path = os.path.expanduser('~/.config/bookmark-archiver/user.conf')
 
 config_files = [
@@ -31,7 +33,7 @@ def get_default_config(err):
         print('No config files.')
         yes = {'yes','y', 'ye'}
         no = {'no','n', ''}
-        choice = bool(os.getenv('BOOKMARK_ARCHIVER_USE_DEFAULT_CONFIG', False))
+        choice = os.getenv('BOOKMARK_ARCHIVER_USE_DEFAULT_CONFIG', 'False') == 'False'
         if choice:
             choice = 'y'
         else:
@@ -91,9 +93,11 @@ INDEX_ROW_TEMPLATE = pkg_resources.resource_filename(__name__, 'templates/index_
 
 # Output Paths
 ROOT_FOLDER = os.path.dirname(os.path.abspath(__file__))
+if os.getenv('BOOKMARK_ARCHIVER_CHG_ROOT_FOLDER', 'True') == 'True':
+    os.chdir(ROOT_FOLDER)
+    logger.debug('Dir changed to: {}'.format(ROOT_FOLDER))
 HTML_FOLDER = config['archive']['html folder']
 ARCHIVE_FOLDER = config['archive']['archive folder']
-os.chdir(ROOT_FOLDER)
 
 # ******************************************************************************
 # ********************** Do not edit below this point **************************
