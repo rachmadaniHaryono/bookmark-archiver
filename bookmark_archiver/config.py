@@ -89,6 +89,10 @@ TIMEOUT = config['website:pdf']['timeout']
 LINK_INDEX_TEMPLATE = pkg_resources.resource_filename(__name__, 'templates/link_index.html')
 INDEX_TEMPLATE = pkg_resources.resource_filename(__name__, 'templates/index.html')
 INDEX_ROW_TEMPLATE = pkg_resources.resource_filename(__name__, 'templates/index_row.html')
+FOOTER_INFO = os.getenv(
+    'FOOTER_INFO',
+    'Content is hosted for personal archiving purposes only. '
+    'Contact server owner for any takedown requests.',)
 
 
 # Output Paths
