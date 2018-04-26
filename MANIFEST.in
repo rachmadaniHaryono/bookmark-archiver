@@ -1,0 +1,2 @@
+recursive-include bookmark_archiver/templates *
+recursive-include bookmark_archiver/static *

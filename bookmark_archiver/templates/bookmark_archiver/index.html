@@ -1,0 +1,130 @@
+{% macro render_row(row_entry) %}
+<tr>
+  <td title="Bookmarked timestamp: {{row_entry.timestamp}}">{{row_entry.timestamp|from_timestamp}}</td>
+    <td>
+        <a href="?" title="Refresh status...">
+          <img src="{{url_for('favicon', timestamp=row_entry.timestamp)}}"
+          onerror="this.src='{{url_for('static', filename='spinner.gif')}}'" class="link-favicon">
+          <!--{{url_for('favicon', timestamp=row_entry.timestamp)}}-->
+        </a>
+    </td>
+    <td><a href="{{row_entry.archive_url}}" style="font-size:1.4em;text-decoration:none;color:black;" title="$title">
+        {{row_entry.title}}<small style="background-color: #eee;border-radius:4px; float:right">{{tags}}</small>
+    </td>
+    <td style="text-align:center"><a href="{{row_entry.files_url}}" title="Files">📂</a></td>
+    <td style="text-align:center"><a href="{{row_entry.pdf_link}}" title="PDF">📄</a></td>
+    <td style="text-align:center"><a href="{{row_entry.screenshot_link}}" title="Screenshot">🖼</a></td>
+    <td style="text-align:center"><a href="{{row_entry.archive_org_url}}" title="Archive.org">🏛</a></td>
+    <td>🔗 <img src="{{row_entry.google_favicon_url}}" height="16px"> <a
+                                                         href="{{row_entry.url}}">{{row_entry.url}}</a></td>
+</tr>
+{% endmacro %}
+
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Archived Sites</title>
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                font-size: 20px;
+                font-weight: 200;
+                text-align: center;
+                margin: 0px;
+                padding: 0px;
+                font-family: "Gill Sans", Helvetica, sans-serif;
+            }
+            header {
+                background-color: #aa1e55;
+                color: white;
+                padding: 10px;
+            }
+            header h1 {
+                font-weight: 300;
+                color: black;
+                margin-top: 10px;
+                margin-bottom: 12px;
+            }
+            header h1 small {
+                color: white;
+                font-size:0.5em;
+            }
+            header h1 small a {
+                text-decoration: none;
+                color: orange;
+                opacity: 0.6
+                font-weight: 300;
+            }
+            header h1 small a:hover {
+                opacity: 1;
+            }
+            table {
+                padding: 6px;
+                width: 100%;
+            }
+            table thead th {
+                font-weight: 400;
+            }
+            tbody tr:nth-child(odd) {
+               background-color: #ffebeb;
+            }
+            table tr td {
+                white-space: nowrap;
+                overflow: hidden;
+                padding-bottom: 0.4em;
+                padding-top: 0.4em;
+                padding-left: 2px;
+            }
+            table tr td img {
+                height: 24px;
+                padding: 0px;
+                padding-right: 5px;
+                text-indent: -10000px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+          <h1 title="Last modified {{time_updated}}">
+                <img src="https://nicksweeting.com/images/archive.png" height="36px">
+                Archived Sites <img src="https://getpocket.com/favicon.ico" height="36px"> <br/>
+                <small>
+                    <a href="https://github.com/pirate/bookmark-archiver">Bookmark Archiver</a>
+                </small>
+            </h1>
+        </header>
+        <table style="width:100%;height: 90%; overflow-y: scroll;table-layout: fixed">
+            <thead>
+                <tr>
+                    <th style="width: 120px;">Bookmarked On</th>
+                    <th style="width: 2vw;">Status</th>
+                    <th style="width: 43vw;">Saved Articles {{num_links}}</th>
+                    <th style="width: 50px">Index</th>
+                    <th style="width: 50px">PDF</th>
+                    <th style="width: 60px;font-size:0.8em;">Screenshot</th>
+                    <th style="width: 50px">A.org</th>
+                    <th style="width: 100px;whitespace:nowrap;overflow-x:scroll;display:block">Original URL</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for entry in entries %}
+              {{ render_row(entry) }}
+              {% endfor %}
+            </tbody>
+        </table>
+        <footer>
+            <br/>
+            <center>
+                <small>
+                    Created using <a href="https://github.com/pirate/bookmark-archiver">Bookmark Archiver</a>
+                    version <a href="https://github.com/pirate/bookmark-archiver/commit/{{git_sha}}">{{short_git_sha}}</a> &nbsp; | &nbsp; 
+                    Download index as <a href="{{url_for('index_json')}}">JSON</a>
+                    <br/><br/>
+                    {{footer_info}}
+                </small>
+            </center>
+            <br/>
+        </footer>
+    </body>
+</html>
