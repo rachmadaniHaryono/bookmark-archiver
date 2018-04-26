@@ -55,6 +55,8 @@ def create_app(script_info=None):
 
     @app.template_filter('from_timestamp')
     def datetime_from_timestamp(s):
+        if not s:
+            return
         return datetime.fromtimestamp(float(s))
 
     from . import views

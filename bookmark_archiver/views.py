@@ -27,11 +27,20 @@ def get_archive_folder():
 
 def index():
     json_file = get_json_file()
-    with open(json_file) as f:
-        json_data = json.load(f)
+    try:
+        with open(json_file) as f:
+            json_data = json.load(f)
+    except FileNotFoundError as e:
+        json_data = {
+            'num_links': 0,
+            'updated': None,
+            'links': [],
+        }
     return render_template(
         'bookmark_archiver/index.html',
-        time_updated=datetime.fromtimestamp(float(json_data['updated'])),
+        time_updated=
+            datetime.fromtimestamp(float(json_data['updated']))
+            if json_data['updated'] else None,
         num_links=json_data['num_links'],
         entries=json_data['links'],
         git_sha=config.GIT_SHA,
