@@ -12,11 +12,13 @@ setup(
     url='https://pirate.github.io/bookmark-archiver/',
     license='MIT',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'requests',
     ],
     extras_require={
         'dev':  ["pdbpp"],
+        'server': ['Flask>=0.12.2'],
     },
     package_data={
         '': ['templates/*.html', 'archiver.conf'],
@@ -29,6 +31,7 @@ setup(
         'console_scripts': [
             'archive=bookmark_archiver.archive:main',
             'archive-config=bookmark_archiver.archive_config:main',
+            'archive-server=bookmark_archiver.server:cli',
         ]
     },
     zip_safe=False
