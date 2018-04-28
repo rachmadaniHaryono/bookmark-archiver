@@ -61,7 +61,6 @@ def create_app(script_info=None):
 
     from . import views
     json_file = views.get_json_file()
-    archive_folder = views.get_archive_folder()
     # import is here to avoid program asking to create default config when no config exist
     # routing
     app.add_url_rule('/', 'index', views.index)  # NOQA
@@ -72,15 +71,8 @@ def create_app(script_info=None):
             os.path.basename(json_file)
         )
     )
-    app.add_url_rule(
-        '/archive/<timestamp>/favicon.ico', 'favicon',
-        lambda timestamp: send_from_directory(
-            os.path.join(os.path.abspath(archive_folder), timestamp),
-            'favicon.ico'
-        )
-    )
-    # app.add_url_rule('/archive/<int:timestamp>/index.html', 'link_index', views.link_index)  # NOQA
-    # app.add_url_rule('/archive/<int:timestamp>/index.json', 'link_index_json', views.link_index_json)  # NOQA
+    app.add_url_rule('/archive/<timestamp>/<filename>', 'link_index', views.link_index)  # NOQA
+    app.add_url_rule('/archive/<timestamp>', 'link_index', views.link_index)  # NOQA
     return app
 
 

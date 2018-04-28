@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{{title}}</title>
+        <title>{{json_data.title}}</title>
         <style>
             html, body {
                 width: 100%;
@@ -156,17 +156,17 @@
     <body>
         <header>
             <h1 class="page-title">
-                <a href="{{'index'}}" class="nav-icon" title="Go to Main Index...">
+                <a href="{{url_for('index')}}" class="nav-icon" title="Go to Main Index...">
                     <img src="{{url_for('static', filename='archive.png')}}" alt="Archive Icon">
                 </a>
                 <a href="#" class="collapse-icon" title="Toggle info panel...">
                     [-]
                 </a>
-                {{title}}<br/>
-                <a href="{{title}}" class="title-url">
+                {{json_data.title}}<br/>
+                <a href="{{json_data.title}}" class="title-url">
                     <small>
                       <img src="{{url_for('link_index', timestamp=timestamp, filename='favicon.ico')}}" height="20px">
-                      {{base_url}}
+                      {{json_data.base_url}}
                     </small>
                 </a>
             </h1>
@@ -176,13 +176,14 @@
                 <div class="col-lg-2">
                     <div class="alert alert-warning">
                         Tags:
-                        <span class="badge badge-success">{{tags}}</span> 
-                        <span class="badge badge-default">{{type}}</span>
+                        <span class="badge badge-success">{{json_data.tags if
+                          json_data.tags else 'untagged'}}</span> 
+                        <span class="badge badge-default">{{json_data.type}}</span>
                         <div style="height:5px"></div>
                         Bookmarked:<br/>
-                        <small>{{bookmarked}}<br/></small>
+                        <small>{{json_data.timestamp|from_timestamp}}<br/></small>
                         Archived:<br/>
-                        <small>{{updated}}</small>
+                        <small>{{json_data.updated|from_timestamp}}</small>
                         <hr/>
                         <a href="{{url_for('link_index', timestamp=timestamp, filename='index.json')}}">JSON</a> |
                         <a href=".">Files</a>
@@ -190,67 +191,67 @@
                 </div>
                 <div class="col-lg-2">
                     <div class="card selected-card">
-                      <iframe class="card-img-top" src="{{wget}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+                      <iframe class="card-img-top" src="{{url_for('link_index', timestamp=timestamp, f=json_data.history.wget.0.output)}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
                       <div class="card-body">
-                        <a href="{{wget}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
+                        <a href="{{url_for('link_index', timestamp=timestamp, f=json_data.history.wget.0.output)}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
                             <img src="{{url_for('static', filename='external.png')}}" class="external"/>
                         </a>
-                        <a href="{{wget}}" target="preview"><h4 class="card-title">Local Archive</h4></a>
+                        <a href="{{url_for('link_index', timestamp=timestamp, f=json_data.history.wget.0.output)}}" target="preview"><h4 class="card-title">Local Archive</h4></a>
                         <p class="card-text">archive/{{domain}}</p>
                       </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="card">
-                      <iframe class="card-img-top" src="{{pdf}}"></iframe>
+                      <iframe class="card-img-top" src="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.pdf.0.output)}}"></iframe>
                       <div class="card-body">
-                        <a href="{{pdf}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
+                        <a href="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.pdf.0.output)}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
                             <img src="{{url_for('static', filename='external.png')}}" class="external"/>
                         </a>
-                        <a href="{{pdf}}" target="preview" id="pdf-btn"><h4 class="card-title">PDF</h4></a>
+                        <a href="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.pdf.0.output)}}" target="preview" id="pdf-btn"><h4 class="card-title">PDF</h4></a>
                         <p class="card-text">archive/output.pdf</p>
                       </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="card">
-                      <iframe class="card-img-top" src="{{screenshot}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+                      <iframe class="card-img-top" src="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.screenshot.0.output)}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
                       <div class="card-body">
-                        <a href="{{screenshot}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
+                        <a href="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.screenshot.0.output)}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
                             <img src="{{url_for('static', filename='external.png')}}" class="external"/>
                         </a>
-                        <a href="{{screenshot}}" target="preview"><h4 class="card-title">Screenshot</h4></a>
+                        <a href="{{url_for('link_index', timestamp=timestamp, filename=json_data.history.screenshot.0.output)}}" target="preview"><h4 class="card-title">Screenshot</h4></a>
                         <p class="card-text">archive/screenshot.png</p>
                       </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="card">
-                      <iframe class="card-img-top" src="{{url}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+                      <iframe class="card-img-top" src="{{json_data.url}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
                       <div class="card-body">
-                        <a href="{{url}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
+                        <a href="{{json_data.url}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
                             <img src="{{url_for('static', filename='external.png')}}" class="external"/>
                         </a>
-                        <a href="{{url}}" target="preview"><h4 class="card-title">Original</h4></a>
+                        <a href="{{json_data.url}}" target="preview"><h4 class="card-title">Original</h4></a>
                         <p class="card-text">{{domain}}</p>
                       </div>
                     </div>
                 </div>
                 <div class="col-lg-2">
                     <div class="card">
-                      <iframe class="card-img-top" src="{{archive_org}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+                      <iframe class="card-img-top" src="{{json_data.history.archive_org.0.output}}" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
                       <div class="card-body">
-                        <a href="{{archive_org}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
+                        <a href="{{json_data.history.archive_org.0.output}}" style="float:right" title="Open in new tab..." target="_blank" rel="noopener">
                             <img src="{{url_for('static', filename='external.png')}}" class="external"/>
                         </a>
-                        <a href="{{archive_org}}" target="preview"><h4 class="card-title">Archive.Org</h4></a>
+                        <a href="{{json_data.history.archive_org.0.output}}" target="preview"><h4 class="card-title">Archive.Org</h4></a>
                         <p class="card-text">web.archive.org/web/...</p>
                       </div>
                     </div>
                 </div>
             </div>
         </div>
-        <iframe sandbox="allow-same-origin allow-scripts allow-forms" class="full-page-iframe" src="{{wget}}" name="preview"></iframe>
+        <iframe sandbox="allow-same-origin allow-scripts allow-forms" class="full-page-iframe" src="{{url_for('link_index', timestamp=timestamp, f=json_data.history.wget.0.output)}}" name="preview"></iframe>
     </body>
 
     <script>

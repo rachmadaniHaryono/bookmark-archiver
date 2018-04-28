@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime
 
-from flask import render_template, send_from_directory
+from flask import render_template, send_from_directory, abort, request
 
 from . import config
 
@@ -47,3 +47,25 @@ def index():
         short_git_sha=config.GIT_SHA[:7] if config.GIT_SHA else '',
         footer_info=config.FOOTER_INFO,
     )
+
+
+def link_index(timestamp, filename=None):
+    archive_folder = get_archive_folder()
+    if filename == 'index.html':
+        json_data = {}
+        json_file = os.path.join(archive_folder, timestamp, 'index.json')
+        with open(json_file) as f:
+            json_data = json.load(f)
+        return render_template(
+            'bookmark_archiver/link_index_fancy.html',
+            timestamp=timestamp,
+            json_data=json_data,
+        )
+
+    if filename is None and request.args.get('f', None) is not None:
+        filename = request.args.get('f')
+    full_filename = os.path.join(os.path.abspath(archive_folder), timestamp, filename)
+    if os.path.isfile(full_filename):
+        return send_from_directory(os.path.join(os.path.abspath(archive_folder), timestamp), filename)
+    else:
+        abort(404)
