@@ -33,7 +33,7 @@ def get_default_config(err):
         print('No config files.')
         yes = {'yes','y', 'ye'}
         no = {'no','n', ''}
-        choice = os.getenv('BOOKMARK_ARCHIVER_USE_DEFAULT_CONFIG', 'False') == 'False'
+        choice = os.getenv('BOOKMARK_ARCHIVER_USE_DEFAULT_CONFIG', 'False') == 'True'
         if choice:
             choice = 'y'
         else:
